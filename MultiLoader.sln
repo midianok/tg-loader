@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiLoader.ConsoleFacade", "MultiLoader.ConsoleFacade\MultiLoader.ConsoleFacade.csproj", "{84108143-502A-4A9C-B3A7-AEC68372E492}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiLoader.Core", "MultiLoader.Core\MultiLoader.Core.csproj", "{33493093-839E-45D1-8007-56C7351D9F9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84108143-502A-4A9C-B3A7-AEC68372E492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84108143-502A-4A9C-B3A7-AEC68372E492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84108143-502A-4A9C-B3A7-AEC68372E492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84108143-502A-4A9C-B3A7-AEC68372E492}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33493093-839E-45D1-8007-56C7351D9F9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33493093-839E-45D1-8007-56C7351D9F9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33493093-839E-45D1-8007-56C7351D9F9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33493093-839E-45D1-8007-56C7351D9F9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
