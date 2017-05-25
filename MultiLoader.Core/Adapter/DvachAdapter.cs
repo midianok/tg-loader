@@ -18,15 +18,20 @@ namespace MultiLoader.Core.Adapter
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
+
+        public event EventHandler<Exception> OnGetContentMetadataError;
+        public event EventHandler<int> OnGetContentMetadata;
+
         public IEnumerable<ContentMetadata> GetContentMetadata(string searchRequest)
         {
-            var board = searchRequest.Split('_')[0] ;
-            var thread = searchRequest.Split('_')[1];
+            IEnumerable<ContentMetadata> result;
 
-            var postsString = _httpClient.GetStringAsync($"{BaseUrl}/{board}/res/{thread}.json").Result;
-            var result = JsonConvert.DeserializeObject<DvachPost>(postsString);
-
-            return result
+            try
+            {
+                var board = searchRequest.Split('_')[0];
+                var thread = searchRequest.Split('_')[1];
+                var postsString = _httpClient.GetStringAsync($"{BaseUrl}/{board}/res/{thread}.json").Result;
+                result = JsonConvert.DeserializeObject<DvachPost>(postsString)
                 .Threads
                 .SelectMany(x => x.Posts)
                 .SelectMany(x => x.Files)
@@ -36,7 +41,18 @@ namespace MultiLoader.Core.Adapter
                     Uri = new Uri(BaseUrl + x.Path),
                     RequestString = searchRequest,
 
-                });
+                }); 
+
+                OnGetContentMetadata?.Invoke(this, result.Count());
+            }
+            catch(Exception ex)
+            {
+                OnGetContentMetadataError?.Invoke(this, ex);
+                return new List<ContentMetadata>();
+            }
+
+            return result;
+                
         }
     }
 }

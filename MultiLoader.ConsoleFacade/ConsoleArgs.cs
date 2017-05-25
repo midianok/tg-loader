@@ -1,9 +1,17 @@
-﻿using System.Linq;
+﻿using MultiLoader.Core;
+using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Adapter;
+using MultiLoader.Core.Db;
+using System.IO;
+using System.Linq;
 
 namespace MultiLoader.ConsoleFacade
 {
     public class ConsoleArgs
     {
+        private const string DavachSource = "2ch";
+        private const string DanbooruSource = "danbooru";
+
         public string SourceName { get; }
         public string SourceRequest { get; }
         public string SavePath { get; }
@@ -24,14 +32,14 @@ namespace MultiLoader.ConsoleFacade
         {
             if (args.Length != 3)
             {
-                consoleArgsResult = new ConsoleArgs("Something happens");
+                consoleArgsResult = new ConsoleArgs("Request should be: \n" + 
+                                                    "[danbooru] [searchRequest] [savePath] \n" + 
+                                                    "[2ch] [board_thread] [savePath]");
                 return false;
             }
 
             consoleArgsResult = new ConsoleArgs(args[0], args[1], args[2]);
             return true; 
         }
-
-
     }
 }

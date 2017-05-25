@@ -13,20 +13,26 @@ namespace MultiLoader.ConsoleFacade
         private const string DavachSource = "2ch";
         private const string DanbooruSource = "danbooru";
 
-        static void Main(string[] args1)
+        static void Main(string[] args)
         {
-            var args = @"2ch e_268534 C:\Users\Midian\test".Split();
 
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
+            {
                 Console.WriteLine(consoleArgs.ValidationMessage);
-
+                return;
+            }
+               
             var loader = GetLoader(consoleArgs);
 
             loader
-                .AddOnContentSavedHandler((sender, content) => Console.WriteLine(content.ContentMetadata.Name))
-                .AddOnSaveErrorHandler((sender, content) => Console.WriteLine("something happend"))
+                .AddOnGetContentMetadataHandler((sender, count) => Console.WriteLine($"Files to download: {count}"))
+                .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))
+                .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Downlad error: {ex.Message}"))
+                .AddOnSavedHandler((sender, content) => Console.WriteLine(content.ContentMetadata.Name))
+                .AddOnSaveErrorHandler((sender, exeption) => Console.WriteLine($"Save error: {exeption.Message}"))
                 .Download(consoleArgs.SourceRequest);
         }
+
 
         private static Loader GetLoader(ConsoleArgs consoleArgs) =>
             DependencyResolver.ResolveAndGet<Loader>(resolver =>

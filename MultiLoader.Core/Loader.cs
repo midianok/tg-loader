@@ -23,18 +23,43 @@ namespace MultiLoader.Core
             _apiAdapter = apiAdapter;
             _contentSaver = contentSaver;
             _contentMetadataRepository = contentMetadataRepository;
+
             _contentSaver.OnSave += (obj, content) => _contentMetadataRepository.Add(content.ContentMetadata);
         }
 
-        public Loader AddOnContentSavedHandler(EventHandler<Content> saveHandler)
+        public Loader AddOnSavedHandler(EventHandler<Content> onSaveHandler)
         {
-            _contentSaver.OnSave += saveHandler;
+            _contentSaver.OnSave += onSaveHandler;
             return this;
         }
 
-        public Loader AddOnSaveErrorHandler(EventHandler<Exception> saveErrorHandler)
+        public Loader AddOnSaveErrorHandler(EventHandler<Exception> onSaveErrorHandler)
         {
-            _contentSaver.OnSaveError += saveErrorHandler;
+            _contentSaver.OnSaveError += onSaveErrorHandler;
+            return this;
+        }
+
+        public Loader AddOnContentDownloadHandler(EventHandler<ContentMetadata> onDownloadHandler)
+        {
+            _contentDownloader.OnDownload += onDownloadHandler;
+            return this;
+        }
+
+        public Loader AddOnContentDownloadErrorHandler(EventHandler<Exception> onDownloadErrorHandler)
+        {
+            _contentDownloader.OnDownloadError += onDownloadErrorHandler;
+            return this;
+        }
+
+        public Loader AddOnGetContentMetadataHandler(EventHandler<int> onGetContentMetadataHandler)
+        {
+            _apiAdapter.OnGetContentMetadata += onGetContentMetadataHandler;
+            return this;
+        }
+
+        public Loader AddGetContentMetadataErrorHandler(EventHandler<Exception> onGetContentMetadataErrorHandler)
+        {
+            _apiAdapter.OnGetContentMetadataError += onGetContentMetadataErrorHandler;
             return this;
         }
 
@@ -44,10 +69,5 @@ namespace MultiLoader.Core
                 .Except(_contentMetadataRepository.GetAll())
                 .Map(_contentDownloader.DownloadContent)
                 .Each(_contentSaver.SaveContent);
-
-        public void ClearData(string filesPath)
-        {
-            _contentMetadataRepository.GetAll();
-        }
     }
 }
