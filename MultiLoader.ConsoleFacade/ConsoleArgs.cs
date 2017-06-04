@@ -9,9 +9,6 @@ namespace MultiLoader.ConsoleFacade
 {
     public class ConsoleArgs
     {
-        private const string DavachSource = "2ch";
-        private const string DanbooruSource = "danbooru";
-
         public string SourceName { get; }
         public string SourceRequest { get; }
         public string SavePath { get; }

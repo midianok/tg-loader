@@ -16,7 +16,7 @@ namespace MultiLoader.Core.Db
             using (var db = new LiteDatabase(DbPath))
             {
                 var collection = db.GetCollection<ContentMetadata>();
-                return collection.Find(x => x.RequestString == request);
+                return collection.Find(x => x.Request == request);
             }
         }
     }

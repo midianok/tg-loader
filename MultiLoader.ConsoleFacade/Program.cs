@@ -12,9 +12,13 @@ namespace MultiLoader.ConsoleFacade
     {
         private const string DavachSource = "2ch";
         private const string DanbooruSource = "danbooru";
+        private const string AnonIbSource = "anonib";
+        private const string ImgurSource = "imgur";
 
-        static void Main(string[] args)
+        static void Main(string[] args1)
         {
+
+            var args = "imgur LQFLj C:\\Users\\Midian".Split(' ');
 
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
@@ -33,7 +37,7 @@ namespace MultiLoader.ConsoleFacade
                 .Download(consoleArgs.SourceRequest);
         }
 
-
+            
         private static Loader GetLoader(ConsoleArgs consoleArgs) =>
             DependencyResolver.ResolveAndGet<Loader>(resolver =>
             {
@@ -41,9 +45,19 @@ namespace MultiLoader.ConsoleFacade
                 {
                     case DanbooruSource:
                         resolver.RegisterType<DanbooruAdapter, IApiAdapter>();
+                        resolver.RegisterType<Downloader, IContentDownloader>();
                         break;
                     case DavachSource:
                         resolver.RegisterType<DvachAdapter, IApiAdapter>();
+                        resolver.RegisterType<ParallelDownloader, IContentDownloader>();
+                        break;
+                    case AnonIbSource:
+                        resolver.RegisterType<AnonIbAdapter, IApiAdapter>();
+                        resolver.RegisterType<Downloader, IContentDownloader>();
+                        break;
+                    case ImgurSource:
+                        resolver.RegisterType<ImgurAdapter, IApiAdapter>();
+                        resolver.RegisterType<ParallelDownloader, IContentDownloader>();
                         break;
                     default:
                         Console.WriteLine("Unexpected source");
@@ -51,8 +65,8 @@ namespace MultiLoader.ConsoleFacade
                 }
 
                 var savePath = Path.Combine(consoleArgs.SavePath, consoleArgs.SourceRequest);
+
                 resolver
-                    .RegisterType<Downloader, IContentDownloader>()
                     .RegisterType<ContentMetadataRepository, IContentMetadataRepository>("dbpath", savePath)
                     .RegisterType<FileSaver, IContentSaver>("saveDir", savePath)
                     .RegisterType<Loader>();

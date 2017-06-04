@@ -50,7 +50,7 @@ namespace MultiLoader.Core.Adapter
                 .Select(post => new ContentMetadata
                 {
                     Name = post.LargeFileUrl.Split('/').Last(),
-                    RequestString = searchRequest,
+                    Request = searchRequest,
                     SourceType = SourceType.Danbooru,
                     Uri = new Uri(BaseUrl + post.LargeFileUrl),
                 }).ToList();

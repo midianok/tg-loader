@@ -30,6 +30,7 @@ namespace MultiLoader.Core.Adapter
             {
                 var board = searchRequest.Split('_')[0];
                 var thread = searchRequest.Split('_')[1];
+
                 var postsString = _httpClient.GetStringAsync($"{BaseUrl}/{board}/res/{thread}.json").Result;
                 result = JsonConvert.DeserializeObject<DvachPost>(postsString)
                 .Threads
@@ -39,7 +40,7 @@ namespace MultiLoader.Core.Adapter
                 {
                     Name = x.Name,
                     Uri = new Uri(BaseUrl + x.Path),
-                    RequestString = searchRequest,
+                    Request = $"2ch_{board}_{thread}",
 
                 }); 
 

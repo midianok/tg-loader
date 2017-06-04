@@ -5,14 +5,14 @@ namespace MultiLoader.Core.Model
     public class ContentMetadata
     {
         public string Name { get; set; }
-        public string RequestString { get; set; }
+        public string Request { get; set; }
         public SourceType SourceType { get; set; }
         public Uri Uri { get; set; }
 
         #region Equals override
         protected bool Equals(ContentMetadata other)
         {
-            return string.Equals(Name, other.Name) && string.Equals(RequestString, other.RequestString) && SourceType == other.SourceType && Equals(Uri, other.Uri);
+            return string.Equals(Name, other.Name) && string.Equals(Request, other.Request) && SourceType == other.SourceType && Equals(Uri, other.Uri);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +28,7 @@ namespace MultiLoader.Core.Model
             unchecked
             {
                 var hashCode = (Name != null ? Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (RequestString != null ? RequestString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Request != null ? Request.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (int)SourceType;
                 hashCode = (hashCode * 397) ^ (Uri != null ? Uri.GetHashCode() : 0);
                 return hashCode;

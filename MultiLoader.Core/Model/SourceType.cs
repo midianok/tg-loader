@@ -3,6 +3,8 @@
     public enum SourceType
     {
         Danbooru,
-        Dvach
+        Dvach,
+        AnonIb,
+        Imgur
     }
 }
