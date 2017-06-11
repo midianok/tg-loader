@@ -12,11 +12,12 @@ namespace MultiLoader.Core.Adapter
     public class ImgurAdapter : IApiAdapter
     {
         private const string BaseUrl = "https://api.imgur.com";
-        private readonly HttpClient _httpClient;
 
         public event EventHandler<Exception> OnGetContentMetadataError;
         public event EventHandler<int> OnGetContentMetadata;
+        public bool ParallelDownloadSupported { get; } = true;
 
+        private readonly HttpClient _httpClient;
         public ImgurAdapter()
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };

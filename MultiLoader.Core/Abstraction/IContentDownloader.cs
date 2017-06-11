@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MultiLoader.Core.Model;
+﻿using MultiLoader.Core.Model;
 using System;
 
 namespace MultiLoader.Core.Abstraction

@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Model;
 using MultiLoader.Core.Tool;
 
 namespace MultiLoader.Core
 {
-    public class SynchronousLoader : LoaderBase
+    public class SynchronousLoader : Loader
     {
         public SynchronousLoader(
-            IContentDownloader contentDownloader, 
-            IApiAdapter apiAdapter, 
-            IContentSaver contentSaver, 
-            IContentMetadataRepository contentMetadataRepository) 
-            : base(contentDownloader, apiAdapter, contentSaver, contentMetadataRepository) {}
+            IContentDownloader contentDownloader,
+            IApiAdapter apiAdapter,
+            IContentSaver contentSaver,
+            IRepository<ContentMetadata> contentMetadataRepository)
+            : base(contentDownloader, apiAdapter, contentSaver, contentMetadataRepository)
+        {
+            ContentSaver.OnSave += (obj, content) => ContentMetadataRepository.Add(content.ContentMetadata);
+        }
 
         public override void Download(string request)
         {

@@ -24,7 +24,7 @@ namespace MultiLoader.Core.Services
 
         public void SaveContent(Content content)
         {
-            if (content == null) return;
+            if (content == null || content.Data.Length == 0) return;
 
             try
             {

@@ -12,15 +12,17 @@ namespace MultiLoader.Core.Adapter
     public class DanbooruAdapter : IApiAdapter
     {
         private const string BaseUrl = "http://danbooru.donmai.us";
+
+        public event EventHandler<Exception> OnGetContentMetadataError;
+        public event EventHandler<int> OnGetContentMetadata;
+        public bool ParallelDownloadSupported { get; } = false;
+
         private readonly HttpClient _httpClient;
 
         public DanbooruAdapter()
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
-
-        public event EventHandler<Exception> OnGetContentMetadataError;
-        public event EventHandler<int> OnGetContentMetadata;
 
         public IEnumerable<ContentMetadata> GetContentMetadata(string searchRequest)
         {
@@ -29,10 +31,9 @@ namespace MultiLoader.Core.Adapter
 
             while (true)
             {
-                string postsResponce;
                 try
                 {
-                    postsResponce = _httpClient.GetStringAsync($"/posts.json?limit=200&page={page++}&tags={searchRequest}").Result;
+                    var postsResponce = _httpClient.GetStringAsync($"/posts.json?limit=200&page={page++}&tags={searchRequest}").Result;
                     var posts = JsonConvert.DeserializeObject<IEnumerable<DanbooruResponce>>(postsResponce).ToList();
                     if (!posts.Any()) break;
                     postMetadatas.AddRange(posts);

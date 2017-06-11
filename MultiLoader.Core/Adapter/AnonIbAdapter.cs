@@ -12,10 +12,12 @@ namespace MultiLoader.Core.Adapter
 {
     public class AnonIbAdapter : IApiAdapter
     {
+        private const string BaseUrl = "http://anon-ib.co";
+
         public event EventHandler<Exception> OnGetContentMetadataError;
         public event EventHandler<int> OnGetContentMetadata;
+        public bool ParallelDownloadSupported { get; } = true;
 
-        private const string BaseUrl = "http://anon-ib.co";
         private readonly HttpClient _httpClient;
 
         public AnonIbAdapter()
@@ -29,10 +31,6 @@ namespace MultiLoader.Core.Adapter
 
             try
             {
-                //var parsedUrl = threadUrl.Split('/');
-                //var board = parsedUrl[3];
-                //var thread = parsedUrl[5].Replace(".html", "");
-
                 var board = searchRequest.Split('_')[0];
                 var thread = searchRequest.Split('_')[1];
 

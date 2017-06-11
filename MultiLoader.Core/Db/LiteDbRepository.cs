@@ -16,7 +16,6 @@ namespace MultiLoader.Core.Db
             DbPath = $"{dbLocation}\\metadata.db";
         }
             
-
         #region Repository members
         public IEnumerable<TEntity> GetAll()
         {
@@ -37,14 +36,16 @@ namespace MultiLoader.Core.Db
             }
         }
 
-        public void AddRange(IEnumerable<TEntity> offers)
+        public void AddRange(IEnumerable<TEntity> entities)
         {
-            foreach (var offer in offers)
+            using (var db = new LiteDatabase(DbPath))
             {
-                using (var db = new LiteDatabase(DbPath))
+                var collection = db.GetCollection<TEntity>();
+                using (var trans = db.BeginTrans())
                 {
-                    var collection = db.GetCollection<TEntity>();
-                    collection.Insert(offer);
+                    foreach (var entity in entities)
+                        collection.Insert(entity);
+                    trans.Commit();
                 }
             }
         }

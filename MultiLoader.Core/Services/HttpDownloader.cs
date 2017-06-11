@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using MultiLoader.Core.Abstraction;
 using MultiLoader.Core.Model;
 
 namespace MultiLoader.Core.Services
 {
-    public class Downloader : IContentDownloader
+    public class HttpDownloader : IContentDownloader
     {
         private readonly HttpClient _httpClient;
         
-        public Downloader() => _httpClient = new HttpClient();
+        public HttpDownloader() => _httpClient = new HttpClient();
 
         public event EventHandler<ContentMetadata> OnDownload;
         public event EventHandler<Exception> OnDownloadError;

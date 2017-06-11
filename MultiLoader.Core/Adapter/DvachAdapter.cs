@@ -12,15 +12,17 @@ namespace MultiLoader.Core.Adapter
     public class DvachAdapter : IApiAdapter
     {
         private const string BaseUrl = "https://2ch.hk";
+
+        public event EventHandler<Exception> OnGetContentMetadataError;
+        public event EventHandler<int> OnGetContentMetadata;
+        public bool ParallelDownloadSupported { get; } = true;
+
         private readonly HttpClient _httpClient;
 
         public DvachAdapter()
         {
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
         }
-
-        public event EventHandler<Exception> OnGetContentMetadataError;
-        public event EventHandler<int> OnGetContentMetadata;
 
         public IEnumerable<ContentMetadata> GetContentMetadata(string searchRequest)
         {

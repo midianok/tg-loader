@@ -5,6 +5,7 @@
         Danbooru,
         Dvach,
         AnonIb,
-        Imgur
+        Imgur,
+        Unknown
     }
 }
