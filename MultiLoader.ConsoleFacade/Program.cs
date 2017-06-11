@@ -17,9 +17,7 @@ namespace MultiLoader.ConsoleFacade
 
         static void Main(string[] args1)
         {
-
-            var args = "imgur LQFLj C:\\Users\\Midian".Split(' ');
-
+            var args = @"2ch fd_1431671 C:\Users\Midian\t".Split();
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);
@@ -30,11 +28,11 @@ namespace MultiLoader.ConsoleFacade
 
             loader
                 .AddOnGetContentMetadataHandler((sender, count) => Console.WriteLine($"Files to download: {count}"))
-                .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))
-                .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Downlad error: {ex.Message}"))
+                .AddOnGetContentMetadataErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))
+                .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Item download error: {ex.Message}"))
                 .AddOnSavedHandler((sender, content) => Console.WriteLine(content.ContentMetadata.Name))
                 .AddOnSaveErrorHandler((sender, exeption) => Console.WriteLine($"Save error: {exeption.Message}"))
-                .Download(consoleArgs.SourceRequest);
+                .Download1(consoleArgs.SourceRequest);
         }
 
             
@@ -45,19 +43,15 @@ namespace MultiLoader.ConsoleFacade
                 {
                     case DanbooruSource:
                         resolver.RegisterType<DanbooruAdapter, IApiAdapter>();
-                        resolver.RegisterType<Downloader, IContentDownloader>();
                         break;
                     case DavachSource:
                         resolver.RegisterType<DvachAdapter, IApiAdapter>();
-                        resolver.RegisterType<ParallelDownloader, IContentDownloader>();
                         break;
                     case AnonIbSource:
                         resolver.RegisterType<AnonIbAdapter, IApiAdapter>();
-                        resolver.RegisterType<Downloader, IContentDownloader>();
                         break;
                     case ImgurSource:
                         resolver.RegisterType<ImgurAdapter, IApiAdapter>();
-                        resolver.RegisterType<ParallelDownloader, IContentDownloader>();
                         break;
                     default:
                         Console.WriteLine("Unexpected source");
@@ -68,6 +62,7 @@ namespace MultiLoader.ConsoleFacade
 
                 resolver
                     .RegisterType<ContentMetadataRepository, IContentMetadataRepository>("dbpath", savePath)
+                    .RegisterType<Downloader, IContentDownloader>()
                     .RegisterType<FileSaver, IContentSaver>("saveDir", savePath)
                     .RegisterType<Loader>();
             });
