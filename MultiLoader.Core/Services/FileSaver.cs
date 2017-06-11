@@ -24,6 +24,8 @@ namespace MultiLoader.Core.Services
 
         public void SaveContent(Content content)
         {
+            if (content == null) return;
+
             try
             {
                 var saveFilePath = Path.Combine(_saveDir, content.ContentMetadata.Name);

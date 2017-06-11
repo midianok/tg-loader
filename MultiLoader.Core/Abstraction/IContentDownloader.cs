@@ -6,7 +6,7 @@ namespace MultiLoader.Core.Abstraction
 {
     public interface IContentDownloader
     {
-        IEnumerable<Content> DownloadContent(IEnumerable<ContentMetadata> contentMetadata);
+        Content DownloadContent(ContentMetadata contentMetadata);
         event EventHandler<ContentMetadata> OnDownload;
         event EventHandler<Exception> OnDownloadError;
     }

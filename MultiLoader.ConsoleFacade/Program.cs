@@ -17,7 +17,7 @@ namespace MultiLoader.ConsoleFacade
 
         static void Main(string[] args1)
         {
-            var args = @"2ch fd_1431671 C:\Users\Midian\t".Split();
+            var args = @"2ch e_268534 C:\Users\Midian\t".Split();
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);
@@ -32,26 +32,30 @@ namespace MultiLoader.ConsoleFacade
                 .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Item download error: {ex.Message}"))
                 .AddOnSavedHandler((sender, content) => Console.WriteLine(content.ContentMetadata.Name))
                 .AddOnSaveErrorHandler((sender, exeption) => Console.WriteLine($"Save error: {exeption.Message}"))
-                .Download1(consoleArgs.SourceRequest);
+                .Download(consoleArgs.SourceRequest);
         }
 
             
-        private static Loader GetLoader(ConsoleArgs consoleArgs) =>
-            DependencyResolver.ResolveAndGet<Loader>(resolver =>
+        private static LoaderBase GetLoader(ConsoleArgs consoleArgs) =>
+            DependencyResolver.ResolveAndGet<LoaderBase>(resolver =>
             {
                 switch (consoleArgs.SourceName)
                 {
                     case DanbooruSource:
-                        resolver.RegisterType<DanbooruAdapter, IApiAdapter>();
+                        resolver.RegisterType<DanbooruAdapter, IApiAdapter>()
+                                .RegisterType<SynchronousLoader, LoaderBase>();
                         break;
                     case DavachSource:
-                        resolver.RegisterType<DvachAdapter, IApiAdapter>();
+                        resolver.RegisterType<DvachAdapter, IApiAdapter>()
+                                .RegisterType<ParallelLoader, LoaderBase>();
                         break;
                     case AnonIbSource:
-                        resolver.RegisterType<AnonIbAdapter, IApiAdapter>();
+                        resolver.RegisterType<AnonIbAdapter, IApiAdapter>()
+                                .RegisterType<ParallelLoader, LoaderBase>();
                         break;
                     case ImgurSource:
-                        resolver.RegisterType<ImgurAdapter, IApiAdapter>();
+                        resolver.RegisterType<ImgurAdapter, IApiAdapter>()
+                                .RegisterType<ParallelLoader, LoaderBase>();
                         break;
                     default:
                         Console.WriteLine("Unexpected source");
@@ -63,8 +67,7 @@ namespace MultiLoader.ConsoleFacade
                 resolver
                     .RegisterType<ContentMetadataRepository, IContentMetadataRepository>("dbpath", savePath)
                     .RegisterType<Downloader, IContentDownloader>()
-                    .RegisterType<FileSaver, IContentSaver>("saveDir", savePath)
-                    .RegisterType<Loader>();
+                    .RegisterType<FileSaver, IContentSaver>("saveDir", savePath);
             });
         
     }

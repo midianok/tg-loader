@@ -15,10 +15,8 @@ namespace MultiLoader.Core.Services
         public event EventHandler<ContentMetadata> OnDownload;
         public event EventHandler<Exception> OnDownloadError;
 
-        public IEnumerable<Content> DownloadContent(IEnumerable<ContentMetadata> contentMetadatas)
+        public Content DownloadContent(ContentMetadata contentMetadata)
         {
-            foreach (var contentMetadata in contentMetadatas)
-            {
                 byte[] byteArrayResult;
                 try
                 {
@@ -28,15 +26,14 @@ namespace MultiLoader.Core.Services
                 catch(Exception ex)
                 {
                     OnDownloadError?.Invoke(this, ex);
-                    continue;
+                    return null;
                 }
 
-                yield return new Content
+                return new Content
                 {
                     Data = byteArrayResult,
                     ContentMetadata = contentMetadata
                 };
-            }
         }
              
     }
