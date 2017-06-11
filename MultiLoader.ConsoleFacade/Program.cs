@@ -4,7 +4,7 @@ using MultiLoader.Core.Adapter;
 using MultiLoader.Core.Db;
 using MultiLoader.Core.Abstraction;
 using System.IO;
-using MultiLoader.Core.Model;
+using MultiLoader.Core.Services;
 
 namespace MultiLoader.ConsoleFacade
 {

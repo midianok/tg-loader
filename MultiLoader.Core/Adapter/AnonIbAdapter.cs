@@ -1,11 +1,11 @@
 ﻿using MultiLoader.Core.Abstraction;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using MultiLoader.Core.Model;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
+using MultiLoader.Core.Adapter.Responces;
 using MultiLoader.Core.Tool;
 
 namespace MultiLoader.Core.Adapter
@@ -37,7 +37,7 @@ namespace MultiLoader.Core.Adapter
                 var thread = searchRequest.Split('_')[1];
 
                 var postsString = _httpClient.GetStringAsync($"{BaseUrl}/{board}/res/{thread}.json").Result;
-                var posts = JsonConvert.DeserializeObject<AnonIbPost>(postsString).posts;
+                var posts = JsonConvert.DeserializeObject<AnonIbResponce>(postsString).posts;
 
                 foreach (var post in posts)
                 {

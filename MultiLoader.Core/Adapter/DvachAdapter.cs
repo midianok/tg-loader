@@ -1,11 +1,11 @@
 ﻿using MultiLoader.Core.Abstraction;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using MultiLoader.Core.Model;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
+using MultiLoader.Core.Adapter.Responces;
 
 namespace MultiLoader.Core.Adapter
 {

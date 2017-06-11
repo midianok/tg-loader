@@ -1,11 +1,4 @@
-﻿using MultiLoader.Core;
-using MultiLoader.Core.Abstraction;
-using MultiLoader.Core.Adapter;
-using MultiLoader.Core.Db;
-using System.IO;
-using System.Linq;
-
-namespace MultiLoader.ConsoleFacade
+﻿namespace MultiLoader.ConsoleFacade
 {
     public class ConsoleArgs
     {
@@ -30,8 +23,10 @@ namespace MultiLoader.ConsoleFacade
             if (args.Length != 3)
             {
                 consoleArgsResult = new ConsoleArgs("Request should be: \n" + 
-                                                    "[danbooru] [searchRequest] [savePath] \n" + 
-                                                    "[2ch] [board_thread] [savePath]");
+                                                    "[danbooru] [searchRequest] [savePath]\n" + 
+                                                    "[2ch] [board_thread] [savePath]\n" +
+                                                    "[anonib] [board_thread] [savePath]\n" +
+                                                    "[ImgurSource] [albumId] [savePath]\n");
                 return false;
             }
 

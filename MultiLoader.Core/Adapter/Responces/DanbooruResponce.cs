@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace MultiLoader.Core.Model
+namespace MultiLoader.Core.Adapter.Responces
 {
-    class DanbooruPost
+    class DanbooruResponce
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; } = string.Empty;

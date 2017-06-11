@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace MultiLoader.Core.Model
+namespace MultiLoader.Core.Adapter.Responces
 {
-    public class AnonIbPost
+    public class AnonIbResponce
     {
         public List<Post> posts { get; set; }
 

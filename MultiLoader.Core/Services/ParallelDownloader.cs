@@ -1,13 +1,11 @@
-﻿using MultiLoader.Core.Abstraction;
-using MultiLoader.Core.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Model;
 
-namespace MultiLoader.Core.Adapter
+namespace MultiLoader.Core.Services
 {
     public class ParallelDownloader : IContentDownloader
     {

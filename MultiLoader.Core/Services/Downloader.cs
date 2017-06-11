@@ -4,7 +4,7 @@ using System.Net.Http;
 using MultiLoader.Core.Abstraction;
 using MultiLoader.Core.Model;
 
-namespace MultiLoader.Core.Adapter
+namespace MultiLoader.Core.Services
 {
     public class Downloader : IContentDownloader
     {

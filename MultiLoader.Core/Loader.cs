@@ -57,7 +57,7 @@ namespace MultiLoader.Core
             return this;
         }
 
-        public Loader AddGetContentMetadataErrorHandler(EventHandler<Exception> onGetContentMetadataErrorHandler)
+        public Loader AddOnGetContentMetadataErrorHandler(EventHandler<Exception> onGetContentMetadataErrorHandler)
         {
             _apiAdapter.OnGetContentMetadataError += onGetContentMetadataErrorHandler;
             return this;

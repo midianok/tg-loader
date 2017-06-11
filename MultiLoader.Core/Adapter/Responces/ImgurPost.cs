@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace MultiLoader.Core.Model
+namespace MultiLoader.Core.Adapter.Responces
 {
     public class ImgurPost
     {

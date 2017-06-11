@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Adapter.Responces;
 using MultiLoader.Core.Model;
 using Newtonsoft.Json;
 
@@ -23,7 +24,7 @@ namespace MultiLoader.Core.Adapter
 
         public IEnumerable<ContentMetadata> GetContentMetadata(string searchRequest)
         {
-            var postMetadatas = new List<DanbooruPost>();
+            var postMetadatas = new List<DanbooruResponce>();
             var page = 0;
 
             while (true)
@@ -32,7 +33,7 @@ namespace MultiLoader.Core.Adapter
                 try
                 {
                     postsResponce = _httpClient.GetStringAsync($"/posts.json?limit=200&page={page++}&tags={searchRequest}").Result;
-                    var posts = JsonConvert.DeserializeObject<IEnumerable<DanbooruPost>>(postsResponce).ToList();
+                    var posts = JsonConvert.DeserializeObject<IEnumerable<DanbooruResponce>>(postsResponce).ToList();
                     if (!posts.Any()) break;
                     postMetadatas.AddRange(posts);
                 }
