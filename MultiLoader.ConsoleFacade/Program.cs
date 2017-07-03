@@ -1,14 +1,17 @@
 ﻿using System;
 using MultiLoader.Core.Abstraction;
 using System.IO;
+using System.Threading;
+using MultiLoader.ConsoleFacade.ProgressReporter;
 
 namespace MultiLoader.ConsoleFacade
 {
     class Program
     {
-        static void Main(string[] args)
+        private static ProgressBar _progressBar;
+        static void Main(string[] args1)
         {
-
+            var args = "imgur YNJhp C:\\Users\\Midian\\test".Split();
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);
@@ -18,11 +21,27 @@ namespace MultiLoader.ConsoleFacade
             var savePath = Path.Combine(consoleArgs.SavePath, consoleArgs.SourceRequest);
             var loader = Loader.CreateLoader(consoleArgs.SourceType, savePath);
 
+            var filesDownloaded = 1;
             loader
-                .AddOnGetContentMetadataHandler((sender, count) => Console.WriteLine($"Files to download: {count}"))
+                .AddOnAlreadyExistItemsFilteredHandler((sender, count) =>
+                {
+                    if (count != 0)
+                    {
+                        _progressBar = new ProgressBar(count);
+                        Console.WriteLine($"{count} files to download");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nothing to download");
+                    }
+                })
+                .AddOnSavedHandler((sender, content) =>
+                {
+                    _progressBar.Refresh(filesDownloaded, $"{filesDownloaded} {content.ContentMetadata.Name}");
+                    Interlocked.Increment(ref filesDownloaded);
+                })
                 .AddOnGetContentMetadataErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))
                 .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Item download error: {ex.Message}"))
-                .AddOnSavedHandler((sender, content) => Console.WriteLine(content.ContentMetadata.Name))
                 .AddOnSaveErrorHandler((sender, exeption) => Console.WriteLine($"Save error: {exeption.Message}"))
                 .Download(consoleArgs.SourceRequest);
         }

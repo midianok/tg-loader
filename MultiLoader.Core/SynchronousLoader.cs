@@ -19,11 +19,15 @@ namespace MultiLoader.Core
 
         public override void Download(string request)
         {
-            ApiAdapter
-                    .GetContentMetadata(request)
-                    .Except(ContentMetadataRepository.GetAll())
-                    .Select(ContentDownloader.DownloadContent)
-                    .Each(ContentSaver.SaveContent);
+            var itemsToAdd = ApiAdapter
+                .GetContentMetadata(request)
+                .Except(ContentMetadataRepository.GetAll()).ToArray();
+
+            InvokeOnAlreadyExistItemsFiltered(itemsToAdd.Length);
+
+            itemsToAdd
+                .Select(ContentDownloader.DownloadContent)
+                .Each(ContentSaver.SaveContent);
         }
             
     }

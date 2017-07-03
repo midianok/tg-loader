@@ -12,6 +12,7 @@ namespace MultiLoader.Core.Abstraction
         protected readonly IContentDownloader ContentDownloader;
         protected readonly IContentSaver ContentSaver;
         protected readonly IRepository<ContentMetadata> ContentMetadataRepository;
+        private EventHandler<int> OnAlreadyExistItemsFiltered;
 
         protected Loader(
             IContentDownloader contentDownloader, 
@@ -23,6 +24,12 @@ namespace MultiLoader.Core.Abstraction
             ApiAdapter = apiAdapter;
             ContentSaver = contentSaver;
             ContentMetadataRepository = contentMetadataRepository;
+        }
+
+        public Loader AddOnAlreadyExistItemsFilteredHandler(EventHandler<int> onAlreadyExistItemsFilteredHandler)
+        {
+            OnAlreadyExistItemsFiltered += onAlreadyExistItemsFilteredHandler;
+            return this;
         }
 
         public Loader AddOnSavedHandler(EventHandler<Content> onSaveHandler)
@@ -62,6 +69,9 @@ namespace MultiLoader.Core.Abstraction
         }
 
         public abstract void Download(string request);
+
+        protected virtual void InvokeOnAlreadyExistItemsFiltered(int filteredItemsCount) =>
+            OnAlreadyExistItemsFiltered?.Invoke(this, filteredItemsCount);
 
         public static Loader CreateLoader(SourceType source, string savePath)
         {

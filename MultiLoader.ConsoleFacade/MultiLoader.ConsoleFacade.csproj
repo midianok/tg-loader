@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <RuntimeIdentifiers>win10-x64;debian.8-x64</RuntimeIdentifiers>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
     <StartupObject />
@@ -10,6 +11,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MultiLoader.Core\MultiLoader.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ProgressReporter\" />
   </ItemGroup>
 
 </Project>

@@ -24,7 +24,9 @@ namespace MultiLoader.Core
         {
             var filteredMetadata = ApiAdapter
                 .GetContentMetadata(request)
-                .Except(ContentMetadataRepository.GetAll());
+                .Except(ContentMetadataRepository.GetAll()).ToArray();
+
+            InvokeOnAlreadyExistItemsFiltered(filteredMetadata.Length);
 
             Parallel.ForEach(
                 filteredMetadata,
