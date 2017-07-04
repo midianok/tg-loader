@@ -10,11 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MultiLoader.Core\MultiLoader.Core.csproj" />
+    <Compile Remove="ProgressReporter\**" />
+    <EmbeddedResource Remove="ProgressReporter\**" />
+    <None Remove="ProgressReporter\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ProgressReporter\" />
+    <PackageReference Include="Goblinfactory.Konsole.ProgressBar.Core" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MultiLoader.Core\MultiLoader.Core.csproj" />
   </ItemGroup>
 
 </Project>

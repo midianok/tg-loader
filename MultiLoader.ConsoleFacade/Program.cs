@@ -2,7 +2,7 @@
 using MultiLoader.Core.Abstraction;
 using System.IO;
 using System.Threading;
-using MultiLoader.ConsoleFacade.ProgressReporter;
+using Konsole;
 
 namespace MultiLoader.ConsoleFacade
 {
