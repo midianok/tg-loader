@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Infrustructure;
 using MultiLoader.Core.Model;
 using MultiLoader.Core.Tool;
 
@@ -17,10 +17,10 @@ namespace MultiLoader.Core
             ContentSaver.OnSave += (obj, content) => ContentMetadataRepository.Add(content.ContentMetadata);
         }
 
-        public override void Download(string request)
+        public override void Download()
         {
             var itemsToAdd = ApiAdapter
-                .GetContentMetadata(request)
+                .GetContentMetadata()
                 .Except(ContentMetadataRepository.GetAll()).ToArray();
 
             InvokeOnAlreadyExistItemsFiltered(itemsToAdd.Length);

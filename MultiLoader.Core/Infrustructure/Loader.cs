@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using MultiLoader.Core.Adapter;
 using MultiLoader.Core.Db;
 using MultiLoader.Core.Model;
 using MultiLoader.Core.Services;
 
-namespace MultiLoader.Core.Abstraction
+namespace MultiLoader.Core.Infrustructure
 {
     public abstract class Loader
     {
@@ -12,6 +13,7 @@ namespace MultiLoader.Core.Abstraction
         protected readonly IContentDownloader ContentDownloader;
         protected readonly IContentSaver ContentSaver;
         protected readonly IRepository<ContentMetadata> ContentMetadataRepository;
+        protected string Request;
         private EventHandler<int> OnAlreadyExistItemsFiltered;
 
         protected Loader(
@@ -68,16 +70,17 @@ namespace MultiLoader.Core.Abstraction
             return this;
         }
 
-        public abstract void Download(string request);
+        public abstract void Download();
 
         protected virtual void InvokeOnAlreadyExistItemsFiltered(int filteredItemsCount) =>
             OnAlreadyExistItemsFiltered?.Invoke(this, filteredItemsCount);
 
-        public static Loader CreateLoader(SourceType source, string savePath)
+        public static Loader CreateLoader(string request, string savePath)
         {
-            var apiAdapter = ResolveAdapter(source);
-            var metadataRepository = new LiteDbRepository<ContentMetadata>(savePath);
-            var fileSaver = new FileSaver(savePath);
+            var apiAdapter = ResolveAdapter(request);
+            var path = Path.Combine(savePath, apiAdapter.RequestName);
+            var metadataRepository = new LiteDbRepository<ContentMetadata>(path);
+            var fileSaver = new FileSaver(path);
             var contentDownloader = new HttpDownloader();
 
             if (apiAdapter.ParallelDownloadSupported)
@@ -86,20 +89,22 @@ namespace MultiLoader.Core.Abstraction
                 return new SynchronousLoader(contentDownloader, apiAdapter, fileSaver, metadataRepository);
         }
 
-        private static IApiAdapter ResolveAdapter(SourceType source)
+        private static IApiAdapter ResolveAdapter(string request)
         {
-            switch (source)
+            var host = new Uri(request);
+
+            switch (host.Authority)
             {
-                case SourceType.Danbooru:
-                    return new DanbooruAdapter();
-                case SourceType.Dvach:
-                    return new DvachAdapter();
-                case SourceType.AnonIb:
-                    return new AnonIbAdapter();
-                case SourceType.Imgur:
-                    return new ImgurAdapter();
+                case DanbooruAdapter.HostName:
+                    return new DanbooruAdapter(request);
+                case DvachAdapter.HostName:
+                    return new DvachAdapter(request);
+                case AnonIbAdapter.HostName:
+                    return new AnonIbAdapter(request);
+                case ImgurAdapter.HostName:
+                    return new ImgurAdapter(request);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(source), source, null);
+                    throw new ArgumentOutOfRangeException(nameof(request), request, null);
             }
         }
     }

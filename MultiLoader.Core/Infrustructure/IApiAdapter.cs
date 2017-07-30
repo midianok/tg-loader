@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MultiLoader.Core.Model;
-using System;
 
-namespace MultiLoader.Core.Abstraction
+namespace MultiLoader.Core.Infrustructure
 {
     public interface IApiAdapter
     {
         bool ParallelDownloadSupported { get; }
-        IEnumerable<ContentMetadata> GetContentMetadata(string searchRequest);
+        string RequestName { get; }
+        IEnumerable<ContentMetadata> GetContentMetadata();
         event EventHandler<Exception> OnGetContentMetadataError;
         event EventHandler<int> OnGetContentMetadata;
     }

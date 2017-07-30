@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using MultiLoader.Core.Model;
 
-namespace MultiLoader.Core.Abstraction
+namespace MultiLoader.Core.Infrustructure
 {
     public interface IContentSaver
     {

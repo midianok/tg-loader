@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
-using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Infrustructure;
 using MultiLoader.Core.Model;
 
 namespace MultiLoader.Core
@@ -20,10 +20,10 @@ namespace MultiLoader.Core
             ContentSaver.OnSave += (sender, content) => _savedMetadata.Add(content.ContentMetadata);
         }
 
-        public override void Download(string request)
+        public override void Download()
         {
             var filteredMetadata = ApiAdapter
-                .GetContentMetadata(request)
+                .GetContentMetadata()
                 .Except(ContentMetadataRepository.GetAll()).ToArray();
 
             InvokeOnAlreadyExistItemsFiltered(filteredMetadata.Length);

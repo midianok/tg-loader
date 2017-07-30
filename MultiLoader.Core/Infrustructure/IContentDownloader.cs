@@ -1,7 +1,7 @@
-﻿using MultiLoader.Core.Model;
-using System;
+﻿using System;
+using MultiLoader.Core.Model;
 
-namespace MultiLoader.Core.Abstraction
+namespace MultiLoader.Core.Infrustructure
 {
     public interface IContentDownloader
     {

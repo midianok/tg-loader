@@ -1,8 +1,7 @@
 ﻿using System;
-using MultiLoader.Core.Abstraction;
-using System.IO;
 using System.Threading;
 using Konsole;
+using MultiLoader.Core.Infrustructure;
 
 namespace MultiLoader.ConsoleFacade
 {
@@ -11,15 +10,13 @@ namespace MultiLoader.ConsoleFacade
         private static ProgressBar _progressBar;
         static void Main(string[] args1)
         {
-            var args = "imgur YNJhp C:\\Users\\Midian\\test".Split();
+            var args = "http://imgur.com/a/uAFvn D:\\test".Split();
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);
                 return;
             }
-
-            var savePath = Path.Combine(consoleArgs.SavePath, consoleArgs.SourceRequest);
-            var loader = Loader.CreateLoader(consoleArgs.SourceType, savePath);
+            var loader = Loader.CreateLoader(consoleArgs.Request, consoleArgs.SavePath);
 
             var filesDownloaded = 1;
             loader
@@ -43,7 +40,7 @@ namespace MultiLoader.ConsoleFacade
                 .AddOnGetContentMetadataErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))
                 .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Item download error: {ex.Message}"))
                 .AddOnSaveErrorHandler((sender, exeption) => Console.WriteLine($"Save error: {exeption.Message}"))
-                .Download(consoleArgs.SourceRequest);
+                .Download();
         }
 
     }

@@ -1,94 +1,60 @@
-﻿using MultiLoader.Core.Abstraction;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using MultiLoader.Core.Model;
-using System.Net.Http;
-using Newtonsoft.Json;
 using System.Linq;
-using MultiLoader.Core.Adapter.Responces;
-using MultiLoader.Core.Tool;
+using HtmlAgilityPack;
+using MultiLoader.Core.Infrustructure;
 
 namespace MultiLoader.Core.Adapter
 {
     public class AnonIbAdapter : IApiAdapter
     {
+        public const string HostName = "anon-ib.co";
         private const string BaseUrl = "http://anon-ib.co";
 
         public event EventHandler<Exception> OnGetContentMetadataError;
         public event EventHandler<int> OnGetContentMetadata;
         public bool ParallelDownloadSupported { get; } = true;
+        public string RequestName => $"anonib_{_board}_{_thread}";
 
-        private readonly HttpClient _httpClient;
+        private readonly string _board;
+        private readonly string _thread;
 
-        public AnonIbAdapter()
+        public AnonIbAdapter(string request)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri(BaseUrl) };
+            _board = request.Split('/')[3];
+            _thread = request.Split('/')[5].Replace(".html", string.Empty);
         }
 
-        public IEnumerable<ContentMetadata> GetContentMetadata(string searchRequest)
+        public IEnumerable<ContentMetadata> GetContentMetadata()
         {
-            var result = new List<ContentMetadata>();
-
             try
             {
-                var board = searchRequest.Split('_')[0];
-                var thread = searchRequest.Split('_')[1];
+                var web = new HtmlWeb();
+                var threadHtml = web.Load($"{BaseUrl}/{_board}/res/{_thread}.html");
 
-                var postsString = _httpClient.GetStringAsync($"{BaseUrl}/{board}/res/{thread}.json").Result;
-                var posts = JsonConvert.DeserializeObject<AnonIbResponce>(postsString).posts;
-
-                foreach (var post in posts)
-                {
-                    if (post.tim == null) continue;
-
-                    if (post.tim.Contains("-"))
+                var urls = threadHtml.DocumentNode
+                    .Descendants("p")
+                    .Where(x => x.Attributes["class"].Value == "fileinfo")
+                    .Select(x => x.Descendants("a").First())
+                    .Select(x => $"http://anon-ib.co{x.Attributes["href"].Value}")
+                    .Select(uri => new ContentMetadata
                     {
-                        int counter = -1;
-                        bool resp;
-                        do
-                        {
-                            counter++;
-                            var fileName = post.tim.Replace("-0", "");
-                            resp = _httpClient
-                                .GetAsync($"{BaseUrl}/{board}/src/{fileName}-{counter}{post.ext}")
-                                .Result
-                                .IsSuccessStatusCode;
-                            
-
-                        } while (resp);
-
-                        var contentList = counter.For(x => new ContentMetadata
-                        {
-                            Name = $"{post.tim.Replace("-0", "")}-{x}{post.ext}",
-                            Request = $"anonib_{board}_{thread}",
-                            SourceType = SourceType.AnonIb,
-                            Uri = new Uri($"{BaseUrl}/{board}/src/{post.tim.Replace("-0", "")}-{x}{post.ext}")
-                        });
-                        
-                        result.AddRange(contentList);
-                        continue;
-                    }
-
-                    result.Add(new ContentMetadata
-                    {
-                        Name = $"{post.tim}{post.ext}",
-                        Request = $"anonib_{board}_{thread}",
+                        Name = uri.Split('/').Last(),
+                        Request = $"anonib_{_board}_{_thread}",
                         SourceType = SourceType.AnonIb,
-                        Uri = new Uri($"{BaseUrl}/{board}/src/{post.tim}{post.ext}")
-                    });
+                        Uri = new Uri(uri)
+                    }).ToArray();
 
-
-                }
-
-                OnGetContentMetadata?.Invoke(this, result.Count());
+                OnGetContentMetadata?.Invoke(this, urls.Length);
+                return urls;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                OnGetContentMetadataError?.Invoke(this, ex);
-                return new List<ContentMetadata>();
+                OnGetContentMetadataError?.Invoke(this, exception);
             }
-
-            return result;
+            return null;
         }
     }
 }

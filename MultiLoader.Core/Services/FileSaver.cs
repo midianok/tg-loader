@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Infrustructure;
 using MultiLoader.Core.Model;
 
 namespace MultiLoader.Core.Services

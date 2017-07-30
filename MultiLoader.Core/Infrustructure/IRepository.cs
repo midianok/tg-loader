@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MultiLoader.Core.Abstraction
+namespace MultiLoader.Core.Infrustructure
 {
     public interface IRepository<TEntity> where TEntity : class
     {

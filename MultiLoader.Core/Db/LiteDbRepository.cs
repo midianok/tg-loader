@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MultiLoader.Core.Abstraction;
 using LiteDB;
+using MultiLoader.Core.Infrustructure;
 
 namespace MultiLoader.Core.Db
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Http;
-using MultiLoader.Core.Abstraction;
+using MultiLoader.Core.Infrustructure;
 using MultiLoader.Core.Model;
 
 namespace MultiLoader.Core.Services
