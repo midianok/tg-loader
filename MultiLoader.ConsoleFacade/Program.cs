@@ -10,7 +10,7 @@ namespace MultiLoader.ConsoleFacade
         private static ProgressBar _progressBar;
         static void Main(string[] args1)
         {
-            var args = "http://imgur.com/a/uAFvn D:\\test".Split();
+            var args = "http://imgur.com/a/uAFvn".Split();
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);

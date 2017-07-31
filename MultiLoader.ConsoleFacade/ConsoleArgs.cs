@@ -1,14 +1,11 @@
-﻿using MultiLoader.Core.Model;
+﻿using System.IO;
 
 namespace MultiLoader.ConsoleFacade
 {
     public class ConsoleArgs
     {
-        private const string Examples = "Request should be: \n" +
-                                        "[danbooru] [searchRequest] [savePath]\n" +
-                                        "[2ch] [board_thread] [savePath]\n" +
-                                        "[anonib] [board_thread] [savePath]\n" +
-                                        "[imgur] [albumId] [savePath]\n";
+        private const string Examples = "Request should be: [Source_Url] [savePath]";
+
         public string Request { get; }
         public string SavePath { get; }
         public string ValidationMessage { get; }
@@ -19,20 +16,22 @@ namespace MultiLoader.ConsoleFacade
             SavePath = savePath;
         }
 
-        private ConsoleArgs(string validationMessage) =>
-            ValidationMessage = validationMessage;
-        
+        private ConsoleArgs(string validationMessage) => ValidationMessage = validationMessage;
 
         public static bool ParseArgs(string[] args, out ConsoleArgs consoleArgsResult)
         {
-            if (args.Length != 2)
+            switch (args.Length)
             {
-                consoleArgsResult = new ConsoleArgs(Examples);
-                return false;
+                case 2:
+                    consoleArgsResult = new ConsoleArgs(args[0], args[1]);
+                    return true;
+                case 1:
+                    consoleArgsResult = new ConsoleArgs(args[0], Directory.GetCurrentDirectory());
+                    return true;
+                default:
+                    consoleArgsResult = new ConsoleArgs(Examples);
+                    return false;
             }
-
-            consoleArgsResult = new ConsoleArgs(args[0], args[1]);
-            return true; 
         }
     }
 }

@@ -38,12 +38,12 @@ namespace MultiLoader.Core.Adapter
                 var postsString = _httpClient.GetStringAsync($"{BaseUrl}/3/album/{_albumId}").Result;
 
                 result = JsonConvert.DeserializeObject<ImgurPost>(postsString)
-                    .data
-                    .images
+                    .Data
+                    .Images
                     .Select(x => new ContentMetadata
                     {
-                        Name = x.id + '.' + x.link.Split('.').Last(),
-                        Uri = new Uri(x.link),
+                        Name = x.Id + '.' + x.Link.Split('.').Last(),
+                        Uri = new Uri(x.Link),
                         Request = $"imgur_{_albumId}",
                         SourceType = SourceType.Imgur
                     });
