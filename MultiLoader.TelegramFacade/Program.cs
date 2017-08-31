@@ -12,6 +12,7 @@ namespace MultiLoader.TelegramFacade
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
+                .UseUrls("http://localhost:5001")
                 .Build();
             host.Run();
             Bot.Api.SetWebhookAsync().Wait();

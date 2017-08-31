@@ -32,7 +32,7 @@ namespace MultiLoader.TelegramFacade.Controllers
         [IpWhitelist("149.154.167.197", "149.154.167.233")]
         public IActionResult Message([FromBody]Update update)
         {
-            if (_allowedUser != update.Message.Chat.Username &&
+            if (_allowedUser != update.Message.Chat.Username ||
                 update.Message.Type != MessageType.TextMessage) return Ok();
 
             var command = update.Message.Text.Replace("/", string.Empty);
