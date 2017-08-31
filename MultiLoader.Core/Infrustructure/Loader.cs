@@ -13,8 +13,10 @@ namespace MultiLoader.Core.Infrustructure
         protected readonly IContentDownloader ContentDownloader;
         protected readonly IContentSaver ContentSaver;
         protected readonly IRepository<ContentMetadata> ContentMetadataRepository;
+        protected EventHandler OnDownloadFinishedHandler;
         protected string Request;
-        private EventHandler<int> OnAlreadyExistItemsFiltered;
+        private EventHandler<int> _onAlreadyExistItemsFiltered;
+        
 
         protected Loader(
             IContentDownloader contentDownloader, 
@@ -30,7 +32,7 @@ namespace MultiLoader.Core.Infrustructure
 
         public Loader AddOnAlreadyExistItemsFilteredHandler(EventHandler<int> onAlreadyExistItemsFilteredHandler)
         {
-            OnAlreadyExistItemsFiltered += onAlreadyExistItemsFilteredHandler;
+            _onAlreadyExistItemsFiltered += onAlreadyExistItemsFilteredHandler;
             return this;
         }
 
@@ -70,13 +72,21 @@ namespace MultiLoader.Core.Infrustructure
             return this;
         }
 
+        public Loader AddOnDownloadFinishedHandler(EventHandler onDownloadFinishedHandler)
+        {
+            OnDownloadFinishedHandler += onDownloadFinishedHandler;
+            return this;
+        }
+
         public abstract void Download();
 
         protected virtual void InvokeOnAlreadyExistItemsFiltered(int filteredItemsCount) =>
-            OnAlreadyExistItemsFiltered?.Invoke(this, filteredItemsCount);
+            _onAlreadyExistItemsFiltered?.Invoke(this, filteredItemsCount);
 
         public static Loader CreateLoader(string request, string savePath)
         {
+            if (!Uri.IsWellFormedUriString(request, UriKind.Absolute)) return null;
+
             var apiAdapter = ResolveAdapter(request);
             var path = Path.Combine(savePath, apiAdapter.RequestName);
             var metadataRepository = new LiteDbRepository<ContentMetadata>(path);
@@ -92,7 +102,6 @@ namespace MultiLoader.Core.Infrustructure
         private static IApiAdapter ResolveAdapter(string request)
         {
             var host = new Uri(request);
-
             switch (host.Authority)
             {
                 case DanbooruAdapter.HostName:

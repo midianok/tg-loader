@@ -45,7 +45,7 @@ namespace MultiLoader.Core.Adapter
                 catch(Exception ex)
                 {
                     OnGetContentMetadataError?.Invoke(this, ex);
-                    return new List<ContentMetadata>();
+                    return Enumerable.Empty<ContentMetadata>();
                 }
             }
 

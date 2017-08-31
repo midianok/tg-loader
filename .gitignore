@@ -262,3 +262,6 @@ __pycache__/
 
 FolderProfile.pubxml
 FolderProfile.pubxml.user
+
+Content
+appsettings.Development.json

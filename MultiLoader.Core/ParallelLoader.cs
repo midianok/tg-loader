@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using MultiLoader.Core.Infrustructure;
@@ -38,6 +39,7 @@ namespace MultiLoader.Core
                 });
 
             ContentMetadataRepository.AddRange(_savedMetadata);
+            OnDownloadFinishedHandler?.Invoke(this, EventArgs.Empty);
         }
 
     }

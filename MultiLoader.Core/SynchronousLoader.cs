@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MultiLoader.Core.Infrustructure;
 using MultiLoader.Core.Model;
 using MultiLoader.Core.Tool;
@@ -28,6 +29,8 @@ namespace MultiLoader.Core
             itemsToAdd
                 .Select(ContentDownloader.DownloadContent)
                 .Each(ContentSaver.SaveContent);
+
+            OnDownloadFinishedHandler?.Invoke(this, EventArgs.Empty);
         }
             
     }
