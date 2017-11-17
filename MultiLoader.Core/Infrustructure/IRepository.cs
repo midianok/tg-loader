@@ -7,5 +7,6 @@ namespace MultiLoader.Core.Infrustructure
         IEnumerable<TEntity> GetAll();
         void AddRange(IEnumerable<TEntity> entity);
         void Add(TEntity entity);
+        byte[] Commit();
     }
 }

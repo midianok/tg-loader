@@ -89,8 +89,8 @@ namespace MultiLoader.Core.Infrustructure
 
             var apiAdapter = ResolveAdapter(request);
             var path = Path.Combine(savePath, apiAdapter.RequestName);
-            var metadataRepository = new LiteDbRepository<ContentMetadata>(path);
-            var fileSaver = new FileSaver(path);
+            var fileSaver = new GoogleSaver(path);
+            var metadataRepository = fileSaver.GetContentMetadataRepository();
             var contentDownloader = new HttpDownloader();
 
             if (apiAdapter.ParallelDownloadSupported)
@@ -116,5 +116,7 @@ namespace MultiLoader.Core.Infrustructure
                     throw new ArgumentOutOfRangeException(nameof(request), request, null);
             }
         }
+        
+        
     }
 }

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
@@ -8,19 +7,18 @@
     <OutputTypeEx>exe</OutputTypeEx>
     <StartupObject />
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="ProgressReporter\**" />
     <EmbeddedResource Remove="ProgressReporter\**" />
     <None Remove="ProgressReporter\**" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Goblinfactory.Konsole.ProgressBar.Core" Version="1.0.2" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MultiLoader.Core\MultiLoader.Core.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="Temp" />
+  </ItemGroup>
 </Project>

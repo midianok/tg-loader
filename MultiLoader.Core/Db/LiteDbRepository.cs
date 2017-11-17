@@ -8,18 +8,18 @@ namespace MultiLoader.Core.Db
 {
     public class LiteDbRepository<TEntity> : IRepository<TEntity> where TEntity : class 
     {
-        protected readonly string DbPath;
+        private readonly string _dbPath;
 
         public LiteDbRepository(string dbLocation)
         {
             if (!Directory.Exists(dbLocation)) Directory.CreateDirectory(dbLocation);
-            DbPath = $"{dbLocation}\\metadata.db";
+            _dbPath = $"{dbLocation}\\metadata.db";
         }
             
         #region Repository members
         public IEnumerable<TEntity> GetAll()
         {
-            using (var db = new LiteDatabase(DbPath))
+            using (var db = new LiteDatabase(_dbPath))
             {
                 var collection = db.GetCollection<TEntity>();
                 if (collection.Count() == 0) return new List<TEntity>();  
@@ -29,16 +29,21 @@ namespace MultiLoader.Core.Db
 
         public void Add(TEntity entity)
         {
-            using (var db = new LiteDatabase(DbPath))
+            using (var db = new LiteDatabase(_dbPath))
             {
                 var collection = db.GetCollection<TEntity>();
                 collection.Insert(entity);
             }
         }
 
+        public byte[] Commit()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void AddRange(IEnumerable<TEntity> entities)
         {
-            using (var db = new LiteDatabase(DbPath))
+            using (var db = new LiteDatabase(_dbPath))
             {
                 var collection = db.GetCollection<TEntity>();
                 using (var trans = db.BeginTrans())
@@ -48,15 +53,6 @@ namespace MultiLoader.Core.Db
                     trans.Commit();
                 }
             }
-        }
-
-        public void Clear()
-        {
-            try
-            {
-                File.Delete(DbPath);
-            }
-            catch { }
         }
         #endregion
     }

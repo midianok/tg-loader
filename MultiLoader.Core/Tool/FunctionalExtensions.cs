@@ -28,4 +28,12 @@ namespace MultiLoader.Core.Tool
             }
         }
     }
+    
+    public static class Disposable
+    {
+        public static TResult Using<TDisposable, TResult>(Func<TDisposable> factory, Func<TDisposable, TResult> action) where TDisposable : IDisposable
+        {
+            using (var disposable = factory()) return action(disposable);
+        }
+    }
 }

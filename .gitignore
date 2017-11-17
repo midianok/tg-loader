@@ -265,3 +265,6 @@ FolderProfile.pubxml.user
 
 Content
 appsettings.Development.json
+MultiLoader.ConsoleFacade/client_secret.json
+MultiLoader.ConsoleFacade/Google.Apis.Auth.OAuth2.Responses.TokenResponse-user
+MultiLoader.ConsoleFacade/Temp
