@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RuntimeIdentifiers>win10-x64;debian.8-x64</RuntimeIdentifiers>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RuntimeIdentifiers>win10-x64;debian.8-x64;osx.10.13-x64</RuntimeIdentifiers>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
     <StartupObject />

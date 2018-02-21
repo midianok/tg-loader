@@ -8,9 +8,8 @@ namespace MultiLoader.ConsoleFacade
     class Program
     {
         private static ProgressBar _progressBar;
-        static void Main(string[] args1)
+        static void Main(string[] args)
         {
-            var args = new[] {"http://anon-ib.co/cosp/res/66324.html"};
             if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);
