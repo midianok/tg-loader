@@ -13,7 +13,12 @@ namespace MultiLoader.Core.Db
         public LiteDbRepository(string dbLocation)
         {
             if (!Directory.Exists(dbLocation)) Directory.CreateDirectory(dbLocation);
-            _dbPath = $"{dbLocation}\\metadata.db";
+            _dbPath = Path.Combine(dbLocation, "metadata.db");
+        }
+        public LiteDbRepository(string dbLocation, string dbName)
+        {
+            if (!Directory.Exists(dbLocation)) Directory.CreateDirectory(dbLocation);
+            _dbPath = Path.Combine(dbLocation, dbName);
         }
             
         #region Repository members
@@ -34,11 +39,6 @@ namespace MultiLoader.Core.Db
                 var collection = db.GetCollection<TEntity>();
                 collection.Insert(entity);
             }
-        }
-
-        public byte[] Commit()
-        {
-            throw new System.NotImplementedException();
         }
 
         public void AddRange(IEnumerable<TEntity> entities)

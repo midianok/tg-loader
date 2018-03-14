@@ -11,7 +11,6 @@ namespace MultiLoader.Core.Services
     public class FileSaver : IContentSaver
     {
         private readonly string _saveDir;
-        
         public event EventHandler<Content> OnSave;
         public event EventHandler<Exception> OnSaveError;
         
@@ -42,7 +41,5 @@ namespace MultiLoader.Core.Services
         {
             return new LiteDbRepository<ContentMetadata>(_saveDir);
         }
-
-        public void SaveMetadata() { }
     }
 }

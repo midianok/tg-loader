@@ -14,7 +14,6 @@ namespace MultiLoader.Core.Infrustructure
         protected readonly IContentSaver ContentSaver;
         protected readonly IRepository<ContentMetadata> ContentMetadataRepository;
         protected EventHandler OnDownloadFinishedHandler;
-        protected string Request;
         private EventHandler<int> _onAlreadyExistItemsFiltered;
         
 
@@ -88,15 +87,25 @@ namespace MultiLoader.Core.Infrustructure
             if (!Uri.IsWellFormedUriString(request, UriKind.Absolute)) return null;
 
             var apiAdapter = ResolveAdapter(request);
-            var path = Path.Combine(savePath, apiAdapter.RequestName);
-            var fileSaver = new FileSaver(path);
-            var metadataRepository = fileSaver.GetContentMetadataRepository();
+
+            var contentSaver = GetContentSaver(apiAdapter.RequestName, savePath);
+          
+            var metadataRepository = contentSaver.GetContentMetadataRepository();
             var contentDownloader = new HttpDownloader();
 
             if (apiAdapter.ParallelDownloadSupported)
-                return new ParallelLoader(contentDownloader, apiAdapter, fileSaver, metadataRepository);
+                return new ParallelLoader(contentDownloader, apiAdapter, contentSaver, metadataRepository);
             else
-                return new SynchronousLoader(contentDownloader, apiAdapter, fileSaver, metadataRepository);
+                return new SynchronousLoader(contentDownloader, apiAdapter, contentSaver, metadataRepository);
+        }
+
+        private static IContentSaver GetContentSaver(string requestName, string savePath)
+        {
+            if (savePath == "g")
+                return new GoogleSaver(requestName);
+            
+            var path = Path.Combine(savePath, requestName);
+            return new FileSaver(path);
         }
 
         private static IApiAdapter ResolveAdapter(string request)

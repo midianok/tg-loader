@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Threading;
-using Konsole;
 using MultiLoader.Core.Infrustructure;
 
 namespace MultiLoader.ConsoleFacade
 {
     class Program
     {
-        private static ProgressBar _progressBar;
         static void Main(string[] args)
         {
-            if (!ConsoleArgs.ParseArgs(args, out ConsoleArgs consoleArgs))
+            if (!ConsoleArgs.ParseArgs(args, out var consoleArgs))
             {
                 Console.WriteLine(consoleArgs.ValidationMessage);
                 return;
@@ -21,19 +19,11 @@ namespace MultiLoader.ConsoleFacade
             loader
                 .AddOnAlreadyExistItemsFilteredHandler((sender, count) =>
                 {
-                    if (count != 0)
-                    {
-                        _progressBar = new ProgressBar(count);
-                        Console.WriteLine($"{count} files to download");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Nothing to download");
-                    }
+                    Console.WriteLine(count != 0 ? $"{count} files to download" : "Nothing to download");
                 })
                 .AddOnSavedHandler((sender, content) =>
                 {
-                    _progressBar.Refresh(filesDownloaded, $"{filesDownloaded} {content.ContentMetadata.Name}");
+                    Console.WriteLine($"{filesDownloaded} loaded");
                     Interlocked.Increment(ref filesDownloaded);
                 })
                 .AddOnGetContentMetadataErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))

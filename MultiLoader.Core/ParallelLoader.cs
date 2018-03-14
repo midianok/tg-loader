@@ -39,7 +39,6 @@ namespace MultiLoader.Core
                 });
 
             ContentMetadataRepository.AddRange(_savedMetadata);
-            ContentSaver.SaveMetadata();
             OnDownloadFinishedHandler?.Invoke(this, EventArgs.Empty);
         }
 

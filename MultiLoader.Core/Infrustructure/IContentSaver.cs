@@ -10,6 +10,5 @@ namespace MultiLoader.Core.Infrustructure
         event EventHandler<Exception> OnSaveError;
         void SaveContent(Content content);
         IRepository<ContentMetadata> GetContentMetadataRepository();
-        void SaveMetadata();
     }
 }
