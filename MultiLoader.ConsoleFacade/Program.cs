@@ -17,15 +17,13 @@ namespace MultiLoader.ConsoleFacade
 
             var filesDownloaded = 1;
             loader
-                .AddOnAlreadyExistItemsFilteredHandler((sender, count) =>
-                {
-                    Console.WriteLine(count != 0 ? $"{count} files to download" : "Nothing to download");
-                })
+                .AddOnAlreadyExistItemsFilteredHandler((sender, count) => Console.WriteLine(count != 0 ? $"{count} files to download" : "Nothing to download"))
                 .AddOnSavedHandler((sender, content) =>
                 {
-                    Console.WriteLine($"{filesDownloaded} loaded");
+                    Console.Write($"\r{filesDownloaded} loaded");
                     Interlocked.Increment(ref filesDownloaded);
                 })
+                .AddOnDownloadFinishedHandler((sender, ex) => Console.WriteLine("\nDownload finished"))
                 .AddOnGetContentMetadataErrorHandler((sender, ex) => Console.WriteLine($"Error to obtain file list: {ex.Message}"))
                 .AddOnContentDownloadErrorHandler((sender, ex) => Console.WriteLine($"Item download error: {ex.Message}"))
                 .AddOnSaveErrorHandler((sender, exeption) => Console.WriteLine($"Save error: {exeption.Message}"))

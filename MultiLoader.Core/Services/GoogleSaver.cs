@@ -36,7 +36,7 @@ namespace MultiLoader.Core.Services
                 () => new FileStream(secretPath, FileMode.Open, FileAccess.Read),
                 stream => GoogleClientSecrets.Load(stream).Secrets);
 
-            _appFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ml");;
+            _appFilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ml");
             var credFolder = new FileDataStore(_appFilesPath, true);
             var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(secrets, _scopes, User, CancellationToken.None, credFolder).Result;
             
