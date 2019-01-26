@@ -16,12 +16,14 @@ namespace MultiLoader.TelegramFacade.Infrastructure
         
         private const string ContentPath = "Content";
         private const string ListCommand = "list";
-        private readonly string _allowedUser = "ilya_naprimer";
+        private readonly string _allowedUser;
 
         public TelegramService(TelegramBotClient telegramClient, string allowedUser)
         {
             _telegramClient = telegramClient;
             _allowedUser = allowedUser;
+            if (!Directory.Exists(ContentPath))
+                Directory.CreateDirectory(ContentPath);
         }
 
         public void ProcessMessageAsync(Message message)

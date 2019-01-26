@@ -13,4 +13,4 @@ WORKDIR /app
 COPY --from=build /app/MultiLoader/MultiLoader.TelegramFacade/out .
 COPY appsettings.json .
 
-CMD ["ping", "ya.ru"]
+CMD ["dotnet", "MultiLoader.TelegramFacade.dll"]
