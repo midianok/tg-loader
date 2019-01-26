@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <RuntimeIdentifiers>win10-x64;debian.8-x64;osx.10.13-x64</RuntimeIdentifiers>
     <ApplicationIcon />
     <OutputTypeEx>exe</OutputTypeEx>
@@ -9,9 +9,5 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\MultiLoader.Core\MultiLoader.Core.csproj" />
-      <Content Include="client_secret.json">
-          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
   </ItemGroup>
 </Project>
