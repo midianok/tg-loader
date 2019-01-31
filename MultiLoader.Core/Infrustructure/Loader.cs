@@ -95,8 +95,8 @@ namespace MultiLoader.Core.Infrustructure
 
             if (apiAdapter.ParallelDownloadSupported)
                 return new ParallelLoader(contentDownloader, apiAdapter, contentSaver, metadataRepository);
-            else
-                return new SynchronousLoader(contentDownloader, apiAdapter, contentSaver, metadataRepository);
+            
+            return new SynchronousLoader(contentDownloader, apiAdapter, contentSaver, metadataRepository);
         }
 
         private static IContentSaver GetContentSaver(string requestName, string savePath)
@@ -122,7 +122,7 @@ namespace MultiLoader.Core.Infrustructure
                 case ImgurAdapter.HostName:
                     return new ImgurAdapter(request);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(request), request, null);
+                    throw new ArgumentOutOfRangeException(nameof(request), $"{request} is not supported");
             }
         }
         

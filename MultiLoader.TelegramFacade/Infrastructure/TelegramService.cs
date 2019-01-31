@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using MultiLoader.Core.Infrustructure;
@@ -78,21 +79,28 @@ namespace MultiLoader.TelegramFacade.Infrastructure
         private void Download(Message message)
         {
             var userId = message.Chat.Id;
-            var loader = Loader.CreateLoader(message.Text, ContentPath);
+            try
+            {
+                Loader.CreateLoader(message.Text, ContentPath)?
+                    .AddOnAlreadyExistItemsFilteredHandler((sender, count) =>
+                    {
+                        if (count != 0)
+                            _telegramClient.SendTextMessageAsync(userId, $"{count} files to download");
+                        else
+                            _telegramClient.SendTextMessageAsync(userId, "Nothing to download");
 
-            loader?.AddOnAlreadyExistItemsFilteredHandler((sender, count) =>
-                {
-                    if (count != 0)
-                        _telegramClient.SendTextMessageAsync(userId, $"{count} files to download");
-                    else
-                        _telegramClient.SendTextMessageAsync(userId, "Nothing to download");
-
-                })
-                .AddOnGetContentMetadataErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Error to obtain file list: {ex.Message}"))
-                .AddOnContentDownloadErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Item download error: {ex.Message}"))
-                .AddOnSaveErrorHandler((sender, exception) => _telegramClient.SendTextMessageAsync(userId, $"Save error: {exception.Message}"))
-                .AddOnDownloadFinishedHandler((sender, args) => _telegramClient.SendTextMessageAsync(userId, $"{message.Text} download done"))
-                .Download();
+                    })
+                    .AddOnGetContentMetadataErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Error to obtain file list: {ex.Message}"))
+                    .AddOnContentDownloadErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Item download error: {ex.Message}"))
+                    .AddOnSaveErrorHandler((sender, exception) => _telegramClient.SendTextMessageAsync(userId, $"Save error: {exception.Message}"))
+                    .AddOnDownloadFinishedHandler((sender, args) => _telegramClient.SendTextMessageAsync(userId, $"{message.Text} download done"))
+                    .Download();
+            }
+            catch (ArgumentException argumentException)
+            {
+                _telegramClient.SendTextMessageAsync(userId, argumentException.Message);
+            }
+            
         }
     }
 }
