@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace MultiLoader.TelegramFacade.Infrastructure
         
         private const string ContentPath = "Content";
         private const string ListCommand = "list";
+        private const long MaxByteFileSize = 50 * 1000000;
         private readonly string _allowedUser;
 
         public TelegramService(TelegramBotClient telegramClient, string allowedUser)
@@ -57,16 +59,49 @@ namespace MultiLoader.TelegramFacade.Infrastructure
         {
             var contentName = message.Text.Replace("/", string.Empty);
             var contentFolder = Path.Combine(Directory.GetCurrentDirectory(), ContentPath, contentName);
-            var zipTempFile = Path.Combine(Directory.GetCurrentDirectory(), ContentPath, contentName + ".zip");
+            var files = Directory.GetFiles(contentFolder).Select(x => new FileInfo(x));
 
-            if (IOFile.Exists(zipTempFile)) 
-                IOFile.Delete(zipTempFile);
+            var fileInfoLists = new List<List<FileInfo>>{new List<FileInfo>()};
+            foreach (var file in files)
+            {
+                if (file.Length > MaxByteFileSize)
+                    continue;
+                
+                var fileInfoList = fileInfoLists.Last();
+                var size = fileInfoList.Sum(x => x.Length);
+                if (file.Length < MaxByteFileSize - size)
+                {
+                    fileInfoList.Add(file);
+                }
+                else
+                {
+                    var newFileInfoList = new List<FileInfo>{file};
+                    fileInfoLists.Add(newFileInfoList);
+                    
+                }
+            }
 
-            ZipFile.CreateFromDirectory(contentFolder, zipTempFile);
-            using (var zipFile = new FileStream(zipTempFile, FileMode.Open))
-                await _telegramClient.SendDocumentAsync(message.Chat.Id, new InputOnlineFile(zipFile, $"{contentName}.zip"));
-
-            IOFile.Delete(zipTempFile);
+            var counter = 1;
+            foreach (var fileInfoList in fileInfoLists)
+            {
+                var zipTempFile = Path.Combine(Directory.GetCurrentDirectory(), ContentPath, $"{contentName}_{counter}.zip");
+                
+                if (IOFile.Exists(zipTempFile)) 
+                    IOFile.Delete(zipTempFile);
+                
+                using (var archive = ZipFile.Open(zipTempFile, ZipArchiveMode.Create))
+                {
+                    foreach (var fileInfo in fileInfoList)
+                    {
+                        archive.CreateEntryFromFile(fileInfo.FullName, fileInfo.Name, CompressionLevel.NoCompression);
+                    }
+                }
+                
+                counter++;
+                
+                using (var zipFile = new FileStream(zipTempFile, FileMode.Open))
+                   await _telegramClient.SendDocumentAsync(message.Chat.Id, new InputOnlineFile(zipFile, $"{contentName}.zip"));
+            }
         }
 
         private void ShowContent(Message message, string[] content)
@@ -100,6 +135,7 @@ namespace MultiLoader.TelegramFacade.Infrastructure
             {
                 _telegramClient.SendTextMessageAsync(userId, argumentException.Message);
             }
+            
             
         }
     }
