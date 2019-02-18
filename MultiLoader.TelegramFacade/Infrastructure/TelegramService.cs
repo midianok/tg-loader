@@ -100,7 +100,7 @@ namespace MultiLoader.TelegramFacade.Infrastructure
                 counter++;
                 
                 using (var zipFile = new FileStream(zipTempFile, FileMode.Open))
-                   await _telegramClient.SendDocumentAsync(message.Chat.Id, new InputOnlineFile(zipFile, $"{contentName}.zip"));
+                   await _telegramClient.SendDocumentAsync(message.Chat.Id, new InputOnlineFile(zipFile, $"{contentName}_{counter}.zip"));
             }
         }
 
