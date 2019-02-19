@@ -113,12 +113,8 @@ namespace MultiLoader.Core.Infrustructure
             var host = new Uri(request);
             switch (host.Authority)
             {
-                case DanbooruAdapter.HostName:
-                    return new DanbooruAdapter(request);
                 case DvachAdapter.HostName:
                     return new DvachAdapter(request);
-                case AnonIbAdapter.HostName:
-                    return new AnonIbAdapter(request);
                 case ImgurAdapter.HostName:
                     return new ImgurAdapter(request);
                 default:
