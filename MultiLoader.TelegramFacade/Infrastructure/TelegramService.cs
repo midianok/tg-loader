@@ -82,25 +82,32 @@ namespace MultiLoader.TelegramFacade.Infrastructure
             }
 
             var counter = 1;
+            var multiPart = fileInfoLists.Count > 1;
             foreach (var fileInfoList in fileInfoLists)
             {
-                var zipTempFile = Path.Combine(Directory.GetCurrentDirectory(), ContentPath, $"{contentName}_{counter}.zip");
+                var zipTempFilePath = Path.Combine(Directory.GetCurrentDirectory(), ContentPath, $"{contentName}");
                 
-                if (IOFile.Exists(zipTempFile)) 
-                    IOFile.Delete(zipTempFile);
-                
-                using (var archive = ZipFile.Open(zipTempFile, ZipArchiveMode.Create))
+                if (multiPart)
+                    zipTempFilePath += $"_{counter}";
+
+                zipTempFilePath += ".zip";
+                    
+                if (IOFile.Exists(zipTempFilePath)) 
+                    IOFile.Delete(zipTempFilePath);
+
+                using (var archive = ZipFile.Open(zipTempFilePath, ZipArchiveMode.Create))
                 {
                     foreach (var fileInfo in fileInfoList)
                     {
                         archive.CreateEntryFromFile(fileInfo.FullName, fileInfo.Name, CompressionLevel.NoCompression);
                     }
                 }
+
+                var zipTempFileName = zipTempFilePath.Split("/").Last();
+                using (var zipFile = new FileStream(zipTempFilePath, FileMode.Open))
+                   await _telegramClient.SendDocumentAsync(message.Chat.Id, new InputOnlineFile(zipFile, zipTempFileName));
                 
                 counter++;
-                
-                using (var zipFile = new FileStream(zipTempFile, FileMode.Open))
-                   await _telegramClient.SendDocumentAsync(message.Chat.Id, new InputOnlineFile(zipFile, $"{contentName}_{counter}.zip"));
             }
         }
 
