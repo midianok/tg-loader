@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using Microsoft.Extensions.Configuration;
 using MultiLoader.TelegramFacade.Infrastructure;
@@ -23,7 +24,8 @@ namespace MultiLoader.TelegramFacade
             var settings = configuration.Get<Settings>();
             var telegramClient = new TelegramBotClient(settings.TelegramBotToken);
             var telegramService = new TelegramService(telegramClient, settings.TelegramUsersAccess);
-
+            
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             telegramClient.OnMessage += (sender, update) => telegramService.ProcessMessageAsync(update.Message);
             telegramClient.StartReceiving();
             Console.WriteLine("Started");
