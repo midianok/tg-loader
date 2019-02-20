@@ -17,7 +17,7 @@ namespace MultiLoader.ConsoleFacade
 
             var filesDownloaded = 1;
             loader
-                .AddOnAlreadyExistItemsFilteredHandler((sender, count) => Console.WriteLine(count != 0 ? $"{count} files to download" : "Nothing to download"))
+                .AddBeforeDownloadHandler((sender, count) => Console.WriteLine(count != 0 ? $"{count} files to download" : "Nothing to download"))
                 .AddOnSavedHandler((sender, content) =>
                 {
                     Console.Write($"\r{filesDownloaded} loaded");

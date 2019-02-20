@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using MultiLoader.Core.Infrustructure;
 using MultiLoader.Core.Model;
@@ -28,7 +29,7 @@ namespace MultiLoader.Core
                 .Except(ContentMetadataRepository.GetAll()).ToArray();
 
             InvokeOnAlreadyExistItemsFiltered(filteredMetadata.Length);
-
+            
             Parallel.ForEach(
                 filteredMetadata,
                 new ParallelOptions { MaxDegreeOfParallelism = 5 },

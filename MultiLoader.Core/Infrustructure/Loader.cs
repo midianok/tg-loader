@@ -29,7 +29,7 @@ namespace MultiLoader.Core.Infrustructure
             ContentMetadataRepository = contentMetadataRepository;
         }
 
-        public Loader AddOnAlreadyExistItemsFilteredHandler(EventHandler<int> onAlreadyExistItemsFilteredHandler)
+        public Loader AddBeforeDownloadHandler(EventHandler<int> onAlreadyExistItemsFilteredHandler)
         {
             _onAlreadyExistItemsFiltered += onAlreadyExistItemsFilteredHandler;
             return this;

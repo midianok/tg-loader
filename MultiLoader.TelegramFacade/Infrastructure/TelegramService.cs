@@ -129,30 +129,33 @@ namespace MultiLoader.TelegramFacade.Infrastructure
             try
             {
                 Loader.CreateLoader(message.Text, ContentPath)?
-                    .AddOnAlreadyExistItemsFilteredHandler( async (sender, count) =>
+                    .AddBeforeDownloadHandler( async (sender, alreadyDownloadedItemsCount) =>
                     {
-                        if (count != 0)
+                        if (alreadyDownloadedItemsCount != 0)
                         {
-                            fileCount = count;
-                            await _telegramClient.SendTextMessageAsync(userId, $"{count} files to download");
+                            fileCount = alreadyDownloadedItemsCount;
                             progressMessage = await _telegramClient.SendTextMessageAsync(userId, $"{downloadedCounter}/{fileCount} files downloaded 📂");
                         }
                         else
                             await _telegramClient.SendTextMessageAsync(userId, "Nothing to download 👐");
 
                     })
-                    .AddOnGetContentMetadataErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Error to obtain file list: {ex.Message}"))
-                    .AddOnContentDownloadErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Item download error: {ex.Message}"))
-                    .AddOnSaveErrorHandler((sender, exception) => _telegramClient.SendTextMessageAsync(userId, $"Save error: {exception.Message}"))
-                    .AddOnDownloadFinishedHandler((sender, args) => _telegramClient.EditMessageTextAsync(userId, progressMessage.MessageId, $"{message.Text} download done 🎉"))
-                    .AddOnSavedHandler( async (sender, content) =>
+                    .AddOnDownloadFinishedHandler((sender, args) =>
+                    {
+                        if (progressMessage != null)
+                             _telegramClient.EditMessageTextAsync(userId, progressMessage.MessageId, $"{message.Text} download done 🎉").Wait();
+                    })
+                    .AddOnSavedHandler((sender, content) =>
                         {
-                            if (progressMessage == null)
+                            if (progressMessage == null) 
                                 return;
                             
                             Interlocked.Increment(ref downloadedCounter);
-                            await _telegramClient.EditMessageTextAsync(userId, progressMessage.MessageId, $"{downloadedCounter}/{fileCount} files downloaded 📂");
+                            _telegramClient.EditMessageTextAsync(userId, progressMessage.MessageId, $"{downloadedCounter}/{fileCount} files downloaded 📂").Wait();
                         })
+                    .AddOnGetContentMetadataErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Error to obtain file list: {ex.Message}"))
+                    .AddOnContentDownloadErrorHandler((sender, ex) => _telegramClient.SendTextMessageAsync(userId, $"Item download error: {ex.Message}"))
+                    .AddOnSaveErrorHandler((sender, exception) => _telegramClient.SendTextMessageAsync(userId, $"Save error: {exception.Message}"))
                     .Download();
             }
             catch (ArgumentException argumentException)
